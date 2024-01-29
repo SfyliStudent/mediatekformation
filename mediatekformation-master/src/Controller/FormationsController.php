@@ -13,33 +13,39 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @author emds
  */
-class FormationsController extends AbstractController {
+class FormationsController extends AbstractController
+{
+    private const FORMATIONS_TEMPLATE = "pages/formations.html.twig";
 
     /**
-     * 
      * @var FormationRepository
      */
     private $formationRepository;
     
     /**
-     * 
      * @var CategorieRepository
      */
     private $categorieRepository;
-    
-    function __construct(FormationRepository $formationRepository, CategorieRepository $categorieRepository) {
+
+    public function __construct(
+        FormationRepository $formationRepository,
+        CategorieRepository $categorieRepository
+) {
         $this->formationRepository = $formationRepository;
-        $this->categorieRepository= $categorieRepository;
-    }
+        $this->categorieRepository = $categorieRepository;
+}
+
+
     
     /**
      * @Route("/formations", name="formations")
      * @return Response
      */
-    public function index(): Response{
+    public function index(): Response
+    {
         $formations = $this->formationRepository->findAll();
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/formations.html.twig", [
+        return $this->render(self::FORMATIONS_TEMPLATE, [
             'formations' => $formations,
             'categories' => $categories
         ]);
@@ -52,14 +58,15 @@ class FormationsController extends AbstractController {
      * @param type $table
      * @return Response
      */
-    public function sort($champ, $ordre, $table=""): Response{
+    public function sort($champ, $ordre, $table=""): Response
+    {
         $formations = $this->formationRepository->findAllOrderBy($champ, $ordre, $table);
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/formations.html.twig", [
+        return $this->render(self::FORMATIONS_TEMPLATE, [
             'formations' => $formations,
             'categories' => $categories
         ]);
-    }     
+    }
     
     /**
      * @Route("/formations/recherche/{champ}/{table}", name="formations.findallcontain")
@@ -68,28 +75,34 @@ class FormationsController extends AbstractController {
      * @param type $table
      * @return Response
      */
-    public function findAllContain($champ, Request $request, $table=""): Response{
+    
+    public function findAllContain($champ, Request $request, $table=""): Response
+    {
         $valeur = $request->get("recherche");
         $formations = $this->formationRepository->findByContainValue($champ, $valeur, $table);
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/formations.html.twig", [
+        return $this->render(self::FORMATIONS_TEMPLATE, [
             'formations' => $formations,
             'categories' => $categories,
             'valeur' => $valeur,
             'table' => $table
         ]);
-    }  
+    }
     
     /**
      * @Route("/formations/formation/{id}", name="formations.showone")
      * @param type $id
      * @return Response
      */
-    public function showOne($id): Response{
-        $formation = $this->formationRepository->find($id);
-        return $this->render("pages/formation.html.twig", [
-            'formation' => $formation
-        ]);        
-    }   
     
+    public function showOne($id): Response 
+    {
+        $formations = $this->formationRepository->find($id);
+        $categories = $this->categorieRepository->findAll(); // Définir $categories ici
+        return $this->render(self::FORMATIONS_TEMPLATE, [
+            'formations' => $formations,
+            'categories' => $categories // Passer $categories à la vue
+    ]);
+}
+
 }
