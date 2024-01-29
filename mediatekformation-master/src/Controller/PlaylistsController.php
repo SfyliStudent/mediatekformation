@@ -64,18 +64,17 @@ class PlaylistsController extends AbstractController
      * @param type $ordre
      * @return Response
      */
-    
-    public function sort($champ, $ordre): Response
-    {
-        if (
-            $champ == "name"
-) {
+    public function sort($champ, $ordre): Response{
+        if($champ == "name"){
             $playlists = $this->playlistRepository->findAllOrderByName($ordre);
+        }
+        if($champ == "nombre"){
+            $playlists = $this->playlistRepository->findAllOrderByAmount($ordre);
         }
         $categories = $this->categorieRepository->findAll();
         return $this->render(self::PLAYLISTS_TEMPLATE, [
             'playlists' => $playlists,
-            'categories' => $categories,
+            'categories' => $categories
         ]);
     }
     
