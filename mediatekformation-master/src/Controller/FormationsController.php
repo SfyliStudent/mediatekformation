@@ -95,7 +95,7 @@ class FormationsController extends AbstractController
      * @return Response
      */
     
-    public function showOne($id): Response 
+    public function showOne($id): Response
     {
         $formations = $this->formationRepository->find($id);
         $categories = $this->categorieRepository->findAll(); // Définir $categories ici
