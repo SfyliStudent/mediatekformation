@@ -21,6 +21,9 @@ class FormationType extends AbstractType
         $builder
             ->add('publishedAt', DateType::class, [
                 'widget' => 'single_text',
+                 'data' => isset($options['data']) &&
+                    $options['data']->geTpublishedAt() != null ? 
+                    $options['data']->geTpublishedAt() : new DateTime('now'),
                 'label' => 'Date'
             ])
              ->add('title', TextType::class, [
@@ -39,7 +42,9 @@ class FormationType extends AbstractType
                 'multiple' => true,
                 'required' => false
             ])
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class, [
+                'label' => 'Valider'
+            ])
         ;
     }
 
