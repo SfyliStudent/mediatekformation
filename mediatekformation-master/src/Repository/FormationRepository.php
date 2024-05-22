@@ -63,6 +63,14 @@ class FormationRepository extends ServiceEntityRepository
                     ->getResult();
         }
     }
+public function findAllOrderByTable($champ, $ordre, $table): array
+{
+    return $this->createQueryBuilder('f')
+        ->join('f.' . $table, 't')
+        ->orderBy('t.' . $champ, $ordre)
+        ->getQuery()
+        ->getResult();
+}
 
     /**
      * Enregistrements dont un champ contient une valeur
@@ -95,7 +103,19 @@ class FormationRepository extends ServiceEntityRepository
                     ->getResult();
         }
     }
-    
+    public function findByContainValueTable($champ, $valeur, $table): array
+{
+    if ($valeur=="") {
+        return $this->findAll();
+    }
+    return $this->createQueryBuilder('f')
+                ->join('f.' . $table, 't')
+                ->where('t.' . $champ . ' LIKE :valeur')
+                ->setParameter('valeur', '%' . $valeur . '%')
+                ->orderBy('f.publishedAt', 'DESC')
+                ->getQuery()
+                ->getResult();
+}
     /**
      * Retourne les n formations les plus récentes
      * @param type $nb

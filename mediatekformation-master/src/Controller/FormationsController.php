@@ -94,15 +94,12 @@ class FormationsController extends AbstractController
      * @param type $id
      * @return Response
      */
-    
-    public function showOne($id): Response
-    {
-        $formations = $this->formationRepository->find($id);
-        $categories = $this->categorieRepository->findAll(); // Définir $categories ici
-        return $this->render(self::FORMATIONS_TEMPLATE, [
-            'formations' => $formations,
-            'categories' => $categories // Passer $categories à la vue
-    ]);
+    public function showOne($id): Response{
+        $formation = $this->formationRepository->find($id);
+        return $this->render("pages/formation.html.twig", [
+            'formation' => $formation
+        ]);
+    }
 }
 
-}
+
